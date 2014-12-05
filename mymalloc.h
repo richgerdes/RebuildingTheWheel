@@ -3,7 +3,7 @@
 
 #define malloc(x) memMalloc(x);
 #define calloc(x) memCalloc(x);
-#define remalloc(x) memReMalloc(x);
+#define remalloc(x) memRealloc(x);
 #define free(x) memFree(x);
 
 
@@ -15,9 +15,9 @@ struct _memBlock{
 	int free;
 }
 
-void* memMalloc(unsigned int* s);
-void memCalloc(unsigned int* s);
-void memReMalloc(void* p);
+void* memMalloc(unsigned int s);
+void* memCalloc(unsigned int s);
+void* memRealloc(void* p, int s);
 void memfree(void* p);
 
 #endif
