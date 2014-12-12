@@ -6,7 +6,7 @@
 
 #define malloc(x) memMalloc(x,__FILE__, __LINE__);
 #define calloc(x) memCalloc(x,__FILE__, __LINE__);
-#define remalloc(x) memRealloc(x,__FILE__, __LINE__);
+#define realloc(x,y) memRealloc(x,y,__FILE__, __LINE__);
 #define free(x) memFree(x,__FILE__, __LINE__);
 
 
@@ -20,7 +20,7 @@ struct _memBlock{
 
 void* memMalloc(unsigned int s, char * fileName, unsigned int lineNum);
 void* memCalloc(unsigned int s, char * fileName, unsigned int lineNum);
-void* memRealloc(void* p, int s,char * fileName, unsigned int lineNum);
+void* memRealloc(void* p, unsigned int s,char * fileName, unsigned int lineNum);
 void memFree(void* p, char * fileName, unsigned int lineNum);
 
 #endif

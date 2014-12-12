@@ -6,9 +6,9 @@
 
 int main()
 {
-  //int unkown;
-
+  /* Mallocing test */	
   char* string = malloc(sizeof(char)*10);
+	
 
   char* saturation = malloc(sizeof(char)*5001);
 
@@ -21,11 +21,17 @@ int main()
   //free(unkown);
 
   //calloc test
-  char* callocd = calloc(sizeof(char)*1);
+  char* callocd = calloc(sizeof(char)*5);
 
   //Offset test
   char* offset = malloc(sizeof(char)*1);
   free(offset + 10);
+
+  free(callocd);
+
+  char* alloc = realloc(offset, sizeof(char)*2);
+
+  free(alloc);
 
   return 0;
 }

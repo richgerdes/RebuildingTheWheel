@@ -46,13 +46,42 @@ void* memMalloc(unsigned int s, char * fileName, unsigned int lineNum){
 	
 }
 void* memCalloc( unsigned int s,char * fileName, unsigned int lineNum){
+	printf("Callocing block size %d...\n",s);
 	void* ptr = malloc(s);
 	if(ptr != NULL)
 		memset(ptr, 0, s);
 	return ptr;
 }
 
-void* memRealloc(void* p, int s, char * fileName, unsigned int lineNum){
+void* memRealloc(void* p, unsigned int s, char * fileName, unsigned int lineNum){
+	
+	printf("recallocing block %p...\n",p);
+	if(p < (void*)&memory_block || p > (void*)(&memory_block + MEMBLOCK_SIZE)){
+		printf("pointer %p was not in range\n",p);
+		return NULL;
+	}
+	MemBlock* m = (MemBlock*)((char*)p - sizeof(MemBlock));
+	unsigned int diff = s - m->size;
+	if(diff == 0)
+		return p;
+	else if(m->next != m && m->next->free == 1 && m->next->size >= diff){
+
+		printf("extending block %p...\n",p);
+		MemBlock* next = m->next;
+		MemBlock* new = (MemBlock*)(((char*) next) + diff);
+		int i = 0;
+		for(i = sizeof(MemBlock); i > 0; i--){
+			((char*)new)[i] = ((char*)next)[i];
+		}
+
+		new->next->prev = new;
+		new->prev->next = new;
+		new->size -= diff;
+		m->size += diff;
+
+		return p;
+	}
+	printf("moving block %p\n",p);
 	void *ptr = malloc(s);
 	memcpy(ptr, p, s);
 	free(p);
