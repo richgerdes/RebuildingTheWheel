@@ -157,7 +157,7 @@ void printStats(){
 		
 		next = curr->next;
 		
-		if(next == NULL || next < head || (void*)next > (void*)&(memory_block[MEMBLOCK_SIZE]) || next->prev != curr){
+		if(next == NULL){
 			//data overwrite
 			printf("Unable to check all data. Memory blocks lost do to curruption!\n");
 			break;

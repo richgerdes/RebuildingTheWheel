@@ -270,6 +270,7 @@ int main(int argc, char*argv[]){
 
 int main()
 {
+  atexit(printStats);
   //Mallocing test 	
   char* string = malloc(sizeof(char)*10);
 	
@@ -280,6 +281,7 @@ int main()
   char* notmalloc = "1";
   free(notmalloc);
 	
+  printStats();
 	printf("-\n");
   free(string);
   free(string);
@@ -298,9 +300,7 @@ int main()
 
   char* alloc = realloc(offset, sizeof(char)*2);
 
-  free(alloc);	
-	printf("-\n");
-  printStats();
+  free(alloc);
   return 0;
 }
 
