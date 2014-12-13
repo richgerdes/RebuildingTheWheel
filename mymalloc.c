@@ -211,7 +211,6 @@ void printList(){
 	static int initial = 1;
 	MemBlock* head;
 	MemBlock* curr;
-	MemBlock* next;
 	
 	if(initial){
 		initial = 0;

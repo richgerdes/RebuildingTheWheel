@@ -264,44 +264,130 @@ int main(int argc, char*argv[]){
 
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include "mymalloc.h"
 
 
 
-int main()
-{
-  atexit(printStats);
-  //Mallocing test 	
-  char* string = malloc(sizeof(char)*10);
+int main (int argc, char *argv[]){
+
+  int num;
+
+  if (argc != 2){
+      printf ("Please enter executable and the test case nume, 1 to 4\n");
+      return 0;
+  }
+  num = atoi (argv[1]);
+
+  printf ("User entered case: %d\n", num);
+
+  if (num == 1){
+      
+		/*-----Mallocing test-----*/
+      	char *string = malloc (sizeof (char) * 10);
+
+		/*-----Mallocing more then 5000-----*/ 
+      	char *sat = malloc (sizeof (char) * 5001);
+
+		/*-----Not mallocing properly-----*/ 
+      	char *notmalloc = "1";
+
+		/*-----Then freeing an the non malloced space-----*/ 
+	free (notmalloc);
+      
+		/*-----Print the fragmentation stats and leak defection stats-----*/
+	printStats ();
+
+      		/*-----Freeing the malloced string but double freeing it again-----*/ 
+	free (string);
+     	free (string);
+     
+		/*-----Calloc test-----*/ 
+      	char *calloc = calloc (sizeof (char) * 5);
+      
+		/*-----Offset set-----*/ 
+      	char *offset = malloc (sizeof (char) * 1);
+      	free (offset + 10);
+
+		/*-----Freeing the calloced-----*/
+      	free (calloc);
+
+		/*-----Realloc test-----*/
+      	char *alloc = realloc (offset, sizeof (char) * 2);
+      	free (alloc);
+
+    }else if (num == 2){
+
+		/*-----Freeing Pointer that was never allocated-----*/
+	int noalloc; 
+	int *alloc;
 	
+	alloc = malloc(10*sizeof(int));
+	free(&noalloc);
+	printStats();
 
-  char* saturation = malloc(sizeof(char)*5001);
+		/*-----Freeing in the middle of the block-----*/
+	free(alloc+1);
+	printStats();
+
+		/*-----Valid free-----*/
+	free(alloc);
+	printStats();
+
+		/*-----Reallocting memory-----*/
+	char *test = malloc(sizeof(char)*5);
+	char *Realloc = realloc(test, sizeof(char)*1);
+      	free(Realloc);
+	printStats();
+	free(test);
+	printStats();
 	
-	printf("-\n");
-  char* notmalloc = "1";
-  free(notmalloc);
+		/*-----redundant freeing-----*/
+
+	char *redun = malloc(sizeof(char));
+	free(redun);
+	free(redun);
+	printStats();
 	
-  printStats();
-	printf("-\n");
-  free(string);
-  free(string);
+    }else if(num == 3){
+  	
+  	char* string = malloc(sizeof(char)*10);
+
+  	char* saturation = malloc(sizeof(char)*5001);
 	
-	printf("-\n");
-  //free(unkown);
+  	char* notmalloc = "1";
+  
+  	free(notmalloc);
+	
+  	
+  	free(string);
+  
+  	free(string);
+	
+  	printList();
+  
+  	char* callocd = calloc(sizeof(char)*5);
 
-  //calloc test
-  char* callocd = calloc(sizeof(char)*5);
+  	printList();
+  
+  	char* offset = malloc(sizeof(char)*1);
+  	printList();
+  	free(offset + 10);
 
-  //Offset test
-  char* offset = malloc(sizeof(char)*1);
-  free(offset + 10);
+  	printList();
+  	free(callocd);
 
-  free(callocd);
+  	printList();
+  	char* alloc = realloc(offset, sizeof(char)*2);
 
-  char* alloc = realloc(offset, sizeof(char)*2);
-
-  free(alloc);
+  	printList();
+  	free(alloc);
+  
+  	printList();
+  	free(offset);
+  	printList();
+    }
+  
   return 0;
-}
 
+}
+  

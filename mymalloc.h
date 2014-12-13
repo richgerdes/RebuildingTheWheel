@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define malloc(x) memMalloc(x,__FILE__, __LINE__)
 #define calloc(x) memCalloc(x,__FILE__, __LINE__)
