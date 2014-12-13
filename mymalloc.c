@@ -5,6 +5,19 @@
 
 char memory_block[MEMBLOCK_SIZE];
 
+void intiMemoryBlock(){
+	static int first = 1;
+	if(first){
+		atexit(printStats);
+		MemBlock* head = (MemBlock*) memory_block;
+		head->prev = head;
+		head->next = head;
+		head->free = 1;
+		head->size = MEMBLOCK_SIZE - sizeof(MemBlock);
+		first--;
+	}
+}
+
 void* memMalloc(unsigned int s, char * fileName, unsigned int lineNum){
 	static int initial = 1;
 	static MemBlock *head;
@@ -12,12 +25,8 @@ void* memMalloc(unsigned int s, char * fileName, unsigned int lineNum){
 
 	if(initial){
 		initial = 0;
+		intiMemoryBlock();
 		head = (MemBlock*)memory_block;
-		head->prev = head;
-		head->next = head;
-		head->free = 1;
-		head->size = MEMBLOCK_SIZE - sizeof(MemBlock);
-		printf("\tStart: %p \n\tEnd: %p\n",head,&(memory_block[MEMBLOCK_SIZE - 1]));
 	}
 
 	curr = head->prev;
@@ -58,6 +67,12 @@ void* memCalloc( unsigned int s,char * fileName, unsigned int lineNum){
 }
 
 void* memRealloc(void* p, unsigned int s, char * fileName, unsigned int lineNum){
+	
+	static int initial = 1;
+	if(initial){
+		initial = 0;
+		intiMemoryBlock();
+	}
 	
 	printf("reallocing block %p...\n",p);
 	if(p < (void*)&memory_block || p > (void*) &(memory_block[MEMBLOCK_SIZE])){
@@ -106,8 +121,10 @@ void memFree(void* p, char * fileName, unsigned int lineNum){
 	
 	if(initial){
 		initial = 0;
+		intiMemoryBlock();
 		head = (MemBlock*)memory_block;
 	}
+	
 	if(p < (void*)&memory_block || p > (void*)&(memory_block[MEMBLOCK_SIZE])){
 		printf("pointer %p was not in range\n",p);
 		return;
@@ -146,6 +163,7 @@ void memFree(void* p, char * fileName, unsigned int lineNum){
 
 
 void printStats(){
+	static int initial = 1;
 	MemBlock* head = (MemBlock*) memory_block;
 	MemBlock* curr = head;
 	MemBlock* next;
@@ -153,6 +171,11 @@ void printStats(){
 	int bytesUsed = 0;
 	int blocksFree = 0;
 	int blocksUsed = 0;
+	
+	if(initial){
+		initial = 0;
+		intiMemoryBlock();
+	}
 	
 	do{
 		if(!curr->free){
@@ -185,9 +208,15 @@ void printStats(){
 }
 
 void printList(){
+	static int initial = 1;
 	MemBlock* head;
 	MemBlock* curr;
 	MemBlock* next;
+	
+	if(initial){
+		initial = 0;
+		intiMemoryBlock();
+	}
 	
 	head = (MemBlock*) memory_block;
 	curr = head;

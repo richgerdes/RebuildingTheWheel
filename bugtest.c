@@ -8,7 +8,6 @@
 int main()
 {
 
-  atexit(printStats);
   //Mallocing test 	
   char* string = malloc(sizeof(char)*10);
 
