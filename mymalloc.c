@@ -105,7 +105,12 @@ void memFree(void* p, char * fileName, unsigned int lineNum){
 		return;
 	}
 	ptr = (MemBlock*) (p - sizeof (MemBlock));
-
+	
+	if((void*) ptr->prev < (void*)&memory_block || (void*) ptr->prev > (void*)(&memory_block + MEMBLOCK_SIZE)){
+		printf("Invalid Free of block at %p. Pointer not part of block\n",p);
+		return;
+	}
+	
 	if(ptr->prev != NULL && ptr->prev->next == ptr && !ptr->free){
 		printf("Valid free, freeing block %p\n", p);
 		prev = ptr->prev;
@@ -152,7 +157,7 @@ void printStats(){
 		
 		next = curr->next;
 		
-		if(next == NULL || next < head || next > &(memory_block[MEMBLOCK_SIZE]) || next->prev != curr){
+		if(next == NULL || next < head || (void*)next > (void*)&(memory_block[MEMBLOCK_SIZE]) || next->prev != curr){
 			//data overwrite
 			printf("Unable to check all data. Memory blocks lost do to curruption!\n");
 			break;
@@ -167,6 +172,6 @@ void printStats(){
 	printf("\tFree Blocks:\t%d\n",blocksFree);
 	printf("\tUsed Bytes:\t%d\n",bytesUsed);
 	printf("\tUsed Blocks:\t%d\n",blocksUsed);
-	printf("\tData Lost:\t%d\n", MEMBLOCK_SIZE - bytesFree - (blocksUsed + blocksFree) * sizeof(MemBlock) - bytesUsed);
+	printf("\tData Lost:\t%d\n", (int)(MEMBLOCK_SIZE - bytesFree - (blocksUsed + blocksFree) * sizeof(MemBlock) - bytesUsed));
 	
 }
