@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#define malloc(x) memMalloc(x,__FILE__, __LINE__);
-#define calloc(x) memCalloc(x,__FILE__, __LINE__);
-#define realloc(x,y) memRealloc(x,y,__FILE__, __LINE__);
-#define free(x) memFree(x,__FILE__, __LINE__);
+#define malloc(x) memMalloc(x,__FILE__, __LINE__)
+#define calloc(x) memCalloc(x,__FILE__, __LINE__)
+#define realloc(x,y) memRealloc(x,y,__FILE__, __LINE__)
+#define free(x) memFree(x,__FILE__, __LINE__)
 
 
 typedef struct _memBlock MemBlock;
