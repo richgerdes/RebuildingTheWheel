@@ -20,8 +20,7 @@ void* memMalloc(unsigned int s, char * fileName, unsigned int lineNum){
 	}
 
 	curr = head->prev;
-	unsigned int newSize = s + sizeof(MemBlock);	
-	printf("-\n");
+	unsigned int newSize = s + sizeof(MemBlock);
 	do{
 		if(curr->free && curr->size == s){
 			curr->free = 0;
@@ -174,4 +173,19 @@ void printStats(){
 	printf("\tUsed Blocks:\t%d\n",blocksUsed);
 	printf("\tData Lost:\t%d\n", (int)(MEMBLOCK_SIZE - bytesFree - (blocksUsed + blocksFree) * sizeof(MemBlock) - bytesUsed));
 	
+}
+
+void printList(){
+	MemBlock* head;
+	MemBlock* curr;
+	MemBlock* next;
+	
+	head = (MemBlock*) memory_block;
+	curr = head;
+	printf("Block List:\n");
+	do{
+		printf("Block at %p of size %d (next %p)\n",curr, (int) curr->size, curr->next);
+		curr = curr->next;
+	}while(curr != head);
+
 }
