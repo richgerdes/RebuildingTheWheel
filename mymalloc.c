@@ -17,6 +17,7 @@ void* memMalloc(unsigned int s, char * fileName, unsigned int lineNum){
 		head->next = head;
 		head->free = 1;
 		head->size = MEMBLOCK_SIZE - sizeof(MemBlock);
+		printf("\tStart: %p \n\tEnd: %p\n",head,&(memory_block[MEMBLOCK_SIZE - 1]));
 	}
 
 	curr = head->prev;
@@ -24,11 +25,11 @@ void* memMalloc(unsigned int s, char * fileName, unsigned int lineNum){
 	do{
 		if(curr->free && curr->size == s){
 			curr->free = 0;
-			printf("malloced new block of size %d at %p\n",s,((char*)curr + sizeof(MemBlock)));
-			return (void *)((char*)curr + sizeof(MemBlock));
+			printf("malloced new block of size %d at %p\n",s,(((char*)curr) + sizeof(MemBlock)));
+			return (void *)(((char*)curr) + sizeof(MemBlock));
 		}else if(curr->free && curr->size >= newSize){
 			curr->size -= newSize;
-			new = (MemBlock*) ((char*)(curr + sizeof(MemBlock)) + curr->size);
+			new = (MemBlock*) (((char*)curr) + sizeof(MemBlock) + curr->size);
 			new->next = curr->next;
 			new->next->prev = new;
 			curr->next = new;
@@ -50,13 +51,16 @@ void* memCalloc( unsigned int s,char * fileName, unsigned int lineNum){
 	void* ptr = malloc(s);
 	if(ptr != NULL)
 		memset(ptr, 0, s);
+	else
+		printf("NULL!!!\n");
+	printf("%p\n",ptr);
 	return ptr;
 }
 
 void* memRealloc(void* p, unsigned int s, char * fileName, unsigned int lineNum){
 	
 	printf("reallocing block %p...\n",p);
-	if(p < (void*)&memory_block || p > (void*)(&memory_block + MEMBLOCK_SIZE)){
+	if(p < (void*)&memory_block || p > (void*) &(memory_block[MEMBLOCK_SIZE])){
 		printf("pointer %p was not in range\n",p);
 		return NULL;
 	}
@@ -64,15 +68,20 @@ void* memRealloc(void* p, unsigned int s, char * fileName, unsigned int lineNum)
 	unsigned int diff = s - m->size;
 	if(diff <= 0)
 		return p;
-	else if(m->next != m && m->next->free == 1 && m->next->size >= diff){
+	else if(m->next != m && m->next != (MemBlock*)memory_block && m->next->free == 1 && m->next->size >= diff){
 
-		printf("extending block %p...\n",p);
 		MemBlock* next = m->next;
 		MemBlock* new = (MemBlock*)(((char*) next) + diff);
-		int i = 0;
-		for(i = sizeof(MemBlock); i > 0; i--){
-			((char*)new)[i] = ((char*)next)[i];
-		}
+		printf("extending block %p by %d...\n",p,diff);
+		printf("next block at %p (%d)to be moved to %p\n",next,(int)next->size,new);
+		MemBlock* nprev = next->prev;
+		MemBlock* nnext = next->next;
+		unsigned int nsize = next->size;
+		int nfree = next->free;
+		new->prev = nprev;
+		new->next = nnext;
+		new->size = nsize;
+		new->free = nfree;
 
 		new->next->prev = new;
 		new->prev->next = new;
@@ -99,11 +108,11 @@ void memFree(void* p, char * fileName, unsigned int lineNum){
 		initial = 0;
 		head = (MemBlock*)memory_block;
 	}
-	if(p < (void*)&memory_block || p > (void*)(&memory_block + MEMBLOCK_SIZE)){
+	if(p < (void*)&memory_block || p > (void*)&(memory_block[MEMBLOCK_SIZE])){
 		printf("pointer %p was not in range\n",p);
 		return;
 	}
-	ptr = (MemBlock*) (p - sizeof (MemBlock));
+	ptr = (MemBlock*) ((char*)p - sizeof (MemBlock));
 	
 	if((void*) ptr->prev < (void*)&memory_block || (void*) ptr->prev > (void*)&(memory_block[MEMBLOCK_SIZE])){
 		printf("Invalid Free of block at %p. Pointer not part of block\n",p);

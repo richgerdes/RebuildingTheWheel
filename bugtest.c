@@ -12,20 +12,16 @@ int main()
   //Mallocing test 	
   char* string = malloc(sizeof(char)*10);
 
-  printList();
   char* saturation = malloc(sizeof(char)*5001);
 	
-  printList();
   
   char* notmalloc = "1";
   
   free(notmalloc);
 	
-  printList();
   
   free(string);
   
-  printList();
   free(string);
 	
   printList();
@@ -49,6 +45,8 @@ int main()
   printList();
   free(alloc);
   
+  printList();
+  free(offset);
   printList();
   
   return 0;
