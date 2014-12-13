@@ -1,0 +1,72 @@
+﻿Richard Gerdes 
+Shina Kolisetti 
+Test Cases for Pa6
+
+
+Test Case 1 : case 1
+
+
+Basic Mallocing, freeing, callocing, allocating, fragmentation, leak detection, trying to free a pointer not in the heap, freeing pointer that was not returned and corruption detection. 
+
+
+Output expected 
+
+
+1. Mallocing new block for string 
+2. Mallocing new block for saturation but you cannot malloc because it allocating more that required. So it returns saturation as the output. 
+3. Not mallocing properly and trying to free the non malloced space. Returns pointer was not in range.
+4. Then we printStats() that tells fragmentation thats happening in the program now. 
+5. Then we are freeing string that we successfully malloced so its returns a Valid free.
+6. Then we free string again so it an invalid free.  
+7. Then we test our calloc function of 5 and it returns the block size its callocing. 
+Returns “callocing block size of 5”
+8.. We are then testing freeing pointers that were not returned from mallocing.
+                Returns “Invalid free of block and also pointer not part of the block.”
+9. Then freeing the calloced memory.
+        Returns “Valid free”
+
+
+Test Case 2: case 2
+
+
+Basic mallocing, freeing, callocing and allocating, fragmentations etc.
+
+
+Output expected 
+
+
+1. Freeing pointer that was never allocated 
+        returns Malloced block and that the pointer was not in range. 
+2. Freeing in the middle of the block 
+                returns Invalid block and pointer was not part of it.
+3. Mallocing and freeing validly 
+                returns Valid free
+4. Reallocating memory and freeing it 
+                returns reallocating block and valid free 
+5. Redundant freeing 
+                returns Valid free the first time and then invalid free the second time. 
+
+
+Test Case 3: case 3
+
+
+We included some special features apart from the extra credit, it demonstrates the printlist function that prints out the list of the current fragmented blocks of the memory. Used printlist instead of the printstat function. 
+
+
+Output expected 
+
+
+1. Mallocing some memory string 
+                returns Malloced newblock 
+2. Mallocing some memory saturation as a check for saturation 
+                returns Saturation 
+3. Not mallocing properly and then freeing it
+                returns Pointer not in range
+4. Redundant freeing 
+                 returns Invalid free or double free
+5. Calloc test 
+                returns Callocing block size ….
+6. Offset test 
+                returns Pointer not part of the block
+7. Realloc test
+                returns malloced new block and prints a list of what is happening inside the memory.
