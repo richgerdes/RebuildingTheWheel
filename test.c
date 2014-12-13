@@ -1,4 +1,4 @@
-#include	<unistd.h>
+/*#include	<unistd.h>
 #include	<stdio.h>
 #include	<stdlib.h>
 #include	"mymalloc.h"
@@ -260,8 +260,9 @@ int main(int argc, char*argv[]){
 	}
     return 0;
 }
+*/
 
-/*#include "mymalloc.h"
+#include "mymalloc.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -269,10 +270,10 @@ int main(int argc, char*argv[]){
 
 int main()
 {
-  Mallocing test */	
-//  char* string = malloc(sizeof(char)*10);
+  //Mallocing test 	
+  char* string = malloc(sizeof(char)*10);
 	
-/*
+
   char* saturation = malloc(sizeof(char)*5001);
 	
 	printf("-\n");
@@ -302,4 +303,4 @@ int main()
   printStats();
   return 0;
 }
-*/
+
