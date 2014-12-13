@@ -11,13 +11,16 @@ int main()
 	
 
   char* saturation = malloc(sizeof(char)*5001);
-
+	
+	printf("-\n");
   char* notmalloc = "1";
   free(notmalloc);
-
+	
+	printf("-\n");
   free(string);
   free(string);
-
+	
+	printf("-\n");
   //free(unkown);
 
   //calloc test
@@ -31,7 +34,8 @@ int main()
 
   char* alloc = realloc(offset, sizeof(char)*2);
 
-  free(alloc);
-
+  free(alloc);	
+	printf("-\n");
+  printStats();
   return 0;
 }

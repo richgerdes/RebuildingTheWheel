@@ -22,5 +22,6 @@ void* memMalloc(unsigned int s, char * fileName, unsigned int lineNum);
 void* memCalloc(unsigned int s, char * fileName, unsigned int lineNum);
 void* memRealloc(void* p, unsigned int s,char * fileName, unsigned int lineNum);
 void memFree(void* p, char * fileName, unsigned int lineNum);
+void printStats();
 
 #endif

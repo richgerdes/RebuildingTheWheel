@@ -13,7 +13,8 @@ void* memMalloc(unsigned int s, char * fileName, unsigned int lineNum){
 	if(initial){
 		initial = 0;
 		head = (MemBlock*)memory_block;
-		head->prev = head->next = head;
+		head->prev = head;
+		head->next = head;
 		head->free = 1;
 		head->size = MEMBLOCK_SIZE - sizeof(MemBlock);
 	}
@@ -62,7 +63,7 @@ void* memRealloc(void* p, unsigned int s, char * fileName, unsigned int lineNum)
 	}
 	MemBlock* m = (MemBlock*)((char*)p - sizeof(MemBlock));
 	unsigned int diff = s - m->size;
-	if(diff == 0)
+	if(diff <= 0)
 		return p;
 	else if(m->next != m && m->next->free == 1 && m->next->size >= diff){
 
@@ -130,3 +131,42 @@ void memFree(void* p, char * fileName, unsigned int lineNum){
 
 }
 
+
+void printStats(){
+	MemBlock* head = (MemBlock*) memory_block;
+	MemBlock* curr = head;
+	MemBlock* next;
+	int bytesFree = 0;
+	int bytesUsed = 0;
+	int blocksFree = 0;
+	int blocksUsed = 0;
+	
+	do{
+		if(!curr->free){
+			bytesUsed += curr->size;
+			blocksUsed++;
+		}else{
+			bytesFree += curr->size;
+			blocksFree++;
+		}
+		
+		next = curr->next;
+		
+		if(next == NULL || next < head || next > &(memory_block[MEMBLOCK_SIZE]) || next->prev != curr){
+			//data overwrite
+			printf("Unable to check all data. Memory blocks lost do to curruption!\n");
+			break;
+		}
+		
+		curr= next;
+		
+	}while(curr != head);
+	
+	printf("Usage Stats\n");
+	printf("\tFree Bytes:\t%d\n",bytesFree);
+	printf("\tFree Blocks:\t%d\n",blocksFree);
+	printf("\tUsed Bytes:\t%d\n",bytesUsed);
+	printf("\tUsed Blocks:\t%d\n",blocksUsed);
+	printf("\tData Lost:\t%d\n", MEMBLOCK_SIZE - bytesFree - (blocksUsed + blocksFree) * sizeof(MemBlock) - bytesUsed);
+	
+}
