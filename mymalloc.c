@@ -55,7 +55,7 @@ void* memCalloc( unsigned int s,char * fileName, unsigned int lineNum){
 
 void* memRealloc(void* p, unsigned int s, char * fileName, unsigned int lineNum){
 	
-	printf("recallocing block %p...\n",p);
+	printf("reallocing block %p...\n",p);
 	if(p < (void*)&memory_block || p > (void*)(&memory_block + MEMBLOCK_SIZE)){
 		printf("pointer %p was not in range\n",p);
 		return NULL;
@@ -105,7 +105,7 @@ void memFree(void* p, char * fileName, unsigned int lineNum){
 	}
 	ptr = (MemBlock*) (p - sizeof (MemBlock));
 	
-	if((void*) ptr->prev < (void*)&memory_block || (void*) ptr->prev > (void*)(&memory_block + MEMBLOCK_SIZE)){
+	if((void*) ptr->prev < (void*)&memory_block || (void*) ptr->prev > (void*)&(memory_block[MEMBLOCK_SIZE])){
 		printf("Invalid Free of block at %p. Pointer not part of block\n",p);
 		return;
 	}
@@ -182,9 +182,9 @@ void printList(){
 	
 	head = (MemBlock*) memory_block;
 	curr = head;
-	printf("Block List:\n");
+	printf("\e[1;34mBlock List:\n\e[0m");
 	do{
-		printf("Block at %p of size %d (next %p)\n",curr, (int) curr->size, curr->next);
+		printf("\e[1;34m\tBlock at %p of size %d with free status of % d (next %p)\n\e[0m",curr, (int) curr->size, curr->free, curr->next);
 		curr = curr->next;
 	}while(curr != head);
 
